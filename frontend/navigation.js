@@ -392,33 +392,6 @@ document.addEventListener('DOMContentLoaded', function() {
     // Make navigation manager globally available for other scripts
     window.navigationManager = navigationManager;
     
-    // Update server status
-    updateServerStatus();
+
 });
 
-// Update server status indicator
-async function updateServerStatus() {
-    const statusElement = document.getElementById('serverStatus');
-    if (!statusElement) return;
-
-    const statusText = statusElement.querySelector('span');
-    const statusIcon = statusElement.querySelector('i');
-
-    try {
-        const response = await fetch(`${API_BASE_URL}/health`);
-        if (response.ok) {
-            statusElement.classList.add('online');
-            statusText.textContent = 'Online';
-            statusIcon.style.color = '#10b981';
-        } else {
-            throw new Error('Server error');
-        }
-    } catch (error) {
-        statusElement.classList.remove('online');
-        statusText.textContent = 'Offline';
-        statusIcon.style.color = '#ef4444';
-    }
-}
-
-// Update server status periodically
-setInterval(updateServerStatus, 30000); // Check every 30 seconds
