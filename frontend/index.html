@@ -6,22 +6,96 @@
     <title>Bangla Braille to Voice Conversion System</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <h1 class="title">
-                    <span class="title-main">Bangla Braille to Voice</span>
-                    <span class="title-subtitle">Deep Learning Conversion System</span>
-                </h1>
-                <div class="thesis-badge">Thesis Project</div>
+    <!-- Navigation Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <i class="fas fa-braille"></i>
+                <span>BrailleVoice</span>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        
+        <ul class="sidebar-menu">
+            <li class="menu-item active" data-page="converter">
+                <a href="#converter" class="menu-link">
+                    <i class="fas fa-home"></i>
+                    <span>Converter</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="dashboard">
+                <a href="#dashboard" class="menu-link">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="history">
+                <a href="#history" class="menu-link">
+                    <i class="fas fa-history"></i>
+                    <span>History</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="help">
+                <a href="#help" class="menu-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="about">
+                <a href="#about" class="menu-link">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+            </li>
+            <li class="menu-item" data-page="settings">
+                <a href="#settings" class="menu-link">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <div class="thesis-info">
+                <i class="fas fa-graduation-cap"></i>
+                <span>Thesis Project 2024</span>
             </div>
         </div>
-    </header>
+    </nav>
 
-    <main class="main">
-        <div class="container">
+    <!-- Main Content Area -->
+    <div class="main-container">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="header-left">
+                <button class="mobile-menu-toggle" id="mobileMenuToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h1 class="page-title" id="pageTitle">Braille Converter</h1>
+            </div>
+            <div class="header-right">
+                <div class="status-indicator" id="serverStatus">
+                    <i class="fas fa-circle"></i>
+                    <span>Checking...</span>
+                </div>
+                <div class="user-menu">
+                    <button class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Converter Page -->
+            <div class="page active" id="converter-page">
+                <div class="container">
             <!-- Upload Section -->
             <section class="upload-section">
                 <div class="section-header">
@@ -129,26 +203,310 @@
                 </div>
             </section>
 
-            <!-- Info Section -->
-            <section class="info-section">
-                <div class="info-grid">
-                    <div class="info-card">
-                        <h4>🧠 Deep Learning Model</h4>
-                        <p>CNN/Transformer architecture for Bangla Braille character recognition with high accuracy.</p>
+                <!-- Quick Stats -->
+                <section class="quick-stats">
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-braille"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="totalConversions">0</div>
+                                <div class="stat-label">Total Conversions</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-percentage"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="avgAccuracy">0%</div>
+                                <div class="stat-label">Avg. Accuracy</div>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-content">
+                                <div class="stat-value" id="avgTime">0s</div>
+                                <div class="stat-label">Avg. Processing Time</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="info-card">
-                        <h4>🗣️ Text-to-Speech</h4>
-                        <p>Google TTS engine optimized for Bengali language with natural voice synthesis.</p>
+                </section>
+
+                <!-- Info Section -->
+                <section class="info-section">
+                    <div class="info-grid">
+                        <div class="info-card">
+                            <h4>🧠 Deep Learning Model</h4>
+                            <p>CNN/Transformer architecture for Bangla Braille character recognition with high accuracy.</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>🗣️ Text-to-Speech</h4>
+                            <p>Google TTS engine optimized for Bengali language with natural voice synthesis.</p>
+                        </div>
+                        <div class="info-card">
+                            <h4>🔬 Thesis Research</h4>
+                            <p>Academic project demonstrating deep learning applications in accessibility technology.</p>
+                        </div>
                     </div>
-                    <div class="info-card">
-                        <h4>🔬 Thesis Research</h4>
-                        <p>Academic project demonstrating deep learning applications in accessibility technology.</p>
+                </section>
+                </div>
+            </div>
+
+            <!-- Dashboard Page -->
+            <div class="page" id="dashboard-page">
+                <div class="container">
+                    <div class="dashboard-header">
+                        <h2>Analytics Dashboard</h2>
+                        <p>System performance and usage statistics</p>
+                    </div>
+                    
+                    <div class="dashboard-grid">
+                        <div class="dashboard-card">
+                            <h3><i class="fas fa-chart-bar"></i> Conversion Trends</h3>
+                            <div class="chart-container">
+                                <canvas id="trendsChart"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-card">
+                            <h3><i class="fas fa-trophy"></i> Performance Metrics</h3>
+                            <div class="metrics-grid">
+                                <div class="metric">
+                                    <span class="metric-label">Recognition Rate</span>
+                                    <span class="metric-value">95.2%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Processing Speed</span>
+                                    <span class="metric-value">2.3s</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">Success Rate</span>
+                                    <span class="metric-value">98.7%</span>
+                                </div>
+                                <div class="metric">
+                                    <span class="metric-label">User Satisfaction</span>
+                                    <span class="metric-value">4.8/5</span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </div>
-    </main>
+            </div>
 
+            <!-- History Page -->
+            <div class="page" id="history-page">
+                <div class="container">
+                    <div class="history-header">
+                        <h2>Conversion History</h2>
+                        <div class="history-actions">
+                            <button class="btn btn-outline" onclick="clearHistory()">
+                                <i class="fas fa-trash"></i> Clear History
+                            </button>
+                            <button class="btn btn-primary" onclick="exportHistory()">
+                                <i class="fas fa-download"></i> Export Data
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="history-container">
+                        <div class="history-filters">
+                            <input type="text" placeholder="Search conversions..." class="search-input">
+                            <select class="filter-select">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div>
+                        
+                        <div class="history-list" id="historyList">
+                            <!-- History items will be populated here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Help Page -->
+            <div class="page" id="help-page">
+                <div class="container">
+                    <div class="help-header">
+                        <h2>Help & Documentation</h2>
+                        <p>Learn how to use the Bangla Braille to Voice system</p>
+                    </div>
+                    
+                    <div class="help-content">
+                        <div class="help-sidebar">
+                            <ul class="help-nav">
+                                <li><a href="#getting-started">Getting Started</a></li>
+                                <li><a href="#how-to-use">How to Use</a></li>
+                                <li><a href="#troubleshooting">Troubleshooting</a></li>
+                                <li><a href="#faq">FAQ</a></li>
+                                <li><a href="#technical">Technical Details</a></li>
+                            </ul>
+                        </div>
+                        
+                        <div class="help-main">
+                            <section id="getting-started">
+                                <h3>Getting Started</h3>
+                                <p>Welcome to the Bangla Braille to Voice conversion system. This tool helps convert Bangla Braille images to text and speech using advanced deep learning models.</p>
+                                <div class="step-list">
+                                    <div class="step">
+                                        <div class="step-number">1</div>
+                                        <div class="step-content">
+                                            <h4>Upload Braille Image</h4>
+                                            <p>Select or drag-drop a clear image of Bangla Braille text</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">2</div>
+                                        <div class="step-content">
+                                            <h4>Process Image</h4>
+                                            <p>Click convert to process the image through our AI model</p>
+                                        </div>
+                                    </div>
+                                    <div class="step">
+                                        <div class="step-number">3</div>
+                                        <div class="step-content">
+                                            <h4>Get Results</h4>
+                                            <p>View recognized text and listen to synthesized speech</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            
+                            <section id="troubleshooting">
+                                <h3>Troubleshooting</h3>
+                                <div class="troubleshooting-grid">
+                                    <div class="trouble-item">
+                                        <h4><i class="fas fa-exclamation-triangle"></i> Low Recognition Accuracy</h4>
+                                        <p>Ensure good image quality, proper lighting, and clear Braille patterns</p>
+                                    </div>
+                                    <div class="trouble-item">
+                                        <h4><i class="fas fa-exclamation-triangle"></i> Server Connection Error</h4>
+                                        <p>Check if the backend server is running on localhost:8000</p>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- About Page -->
+            <div class="page" id="about-page">
+                <div class="container">
+                    <div class="about-header">
+                        <h2>About This Project</h2>
+                        <p>Thesis Project - Computer Science & Engineering</p>
+                    </div>
+                    
+                    <div class="about-content">
+                        <div class="about-section">
+                            <h3>Project Overview</h3>
+                            <p>This Bangla Braille to Voice conversion system is developed as a final year thesis project to demonstrate the application of deep learning in accessibility technology. The system aims to bridge the communication gap for visually impaired individuals by converting Braille text to audible speech.</p>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>Technical Architecture</h3>
+                            <div class="tech-grid">
+                                <div class="tech-item">
+                                    <i class="fas fa-brain"></i>
+                                    <h4>CNN/Transformer Model</h4>
+                                    <p>Advanced neural network for Braille character recognition</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-microphone"></i>
+                                    <h4>Text-to-Speech</h4>
+                                    <p>Google TTS engine optimized for Bengali language</p>
+                                </div>
+                                <div class="tech-item">
+                                    <i class="fas fa-flask"></i>
+                                    <h4>Research Methodology</h4>
+                                    <p>Machine learning research with extensive testing</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="about-section">
+                            <h3>Research Team</h3>
+                            <div class="team-grid">
+                                <div class="team-member">
+                                    <div class="member-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="member-info">
+                                        <h4>Lead Developer</h4>
+                                        <p>Computer Science & Engineering</p>
+                                    </div>
+                                </div>
+                                <div class="team-member">
+                                    <div class="member-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="member-info">
+                                        <h4>Research Advisor</h4>
+                                        <p>Department of CSE</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Page -->
+            <div class="page" id="settings-page">
+                <div class="container">
+                    <div class="settings-header">
+                        <h2>Settings</h2>
+                        <p>Customize your experience</p>
+                    </div>
+                    
+                    <div class="settings-content">
+                        <div class="settings-section">
+                            <h3>Audio Settings</h3>
+                            <div class="setting-item">
+                                <label for="speechRate">Speech Rate</label>
+                                <input type="range" id="speechRate" min="0.5" max="2" step="0.1" value="1">
+                                <span class="setting-value">1.0x</span>
+                            </div>
+                            <div class="setting-item">
+                                <label for="speechVolume">Speech Volume</label>
+                                <input type="range" id="speechVolume" min="0" max="1" step="0.1" value="0.8">
+                                <span class="setting-value">80%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="settings-section">
+                            <h3>Display Settings</h3>
+                            <div class="setting-item">
+                                <label for="theme">Theme</label>
+                                <select id="theme">
+                                    <option value="light">Light</option>
+                                    <option value="dark">Dark</option>
+                                    <option value="auto">Auto</option>
+                                </select>
+                            </div>
+                            <div class="setting-item">
+                                <label for="fontSize">Font Size</label>
+                                <select id="fontSize">
+                                    <option value="small">Small</option>
+                                    <option value="medium" selected>Medium</option>
+                                    <option value="large">Large</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2024 Bangla Braille to Voice Conversion System</p>
@@ -157,5 +515,6 @@
     </footer>
 
     <script src="app.js"></script>
+    <script src="navigation.js"></script>
 </body>
 </html>

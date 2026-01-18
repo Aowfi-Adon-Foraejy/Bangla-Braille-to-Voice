@@ -380,6 +380,22 @@ document.addEventListener('keydown', function(e) {
         fileInput.click();
     }
     
+    // Ctrl/Cmd + H to view history
+    if ((e.ctrlKey || e.metaKey) && e.key === 'h') {
+        e.preventDefault();
+        if (window.navigationManager) {
+            window.navigationManager.navigateToPage('history');
+        }
+    }
+    
+    // Ctrl/Cmd + D to view dashboard
+    if ((e.ctrlKey || e.metaKey) && e.key === 'd') {
+        e.preventDefault();
+        if (window.navigationManager) {
+            window.navigationManager.navigateToPage('dashboard');
+        }
+    }
+    
     // Escape to reset
     if (e.key === 'Escape') {
         resetApp();
@@ -388,6 +404,14 @@ document.addEventListener('keydown', function(e) {
     // Enter to convert when file is selected
     if (e.key === 'Enter' && selectedFile && imagePreview.style.display !== 'none') {
         convertImage();
+    }
+    
+    // Ctrl/Cmd + S for settings
+    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault();
+        if (window.navigationManager) {
+            window.navigationManager.navigateToPage('settings');
+        }
     }
 });
 
@@ -401,19 +425,159 @@ function saveToHistory(data) {
         duration: data.duration
     });
     
-    // Keep only last 10 conversions
-    if (history.length > 10) {
+    // Keep only last 50 conversions (increased for thesis analytics)
+    if (history.length > 50) {
         history.pop();
     }
     
     localStorage.setItem('brailleHistory', JSON.stringify(history));
+    
+    // Update stats if navigation manager is available
+    if (window.navigationManager) {
+        window.navigationManager.updateStats();
+        window.navigationManager.loadHistoryData();
+    }
 }
 
 // Load history on page load (for demonstration)
 function loadHistory() {
     const history = JSON.parse(localStorage.getItem('brailleHistory') || '[]');
     console.log('Conversion History:', history);
+    return history;
 }
 
 // Initialize history
 loadHistory();
+
+// Additional utility functions for professional presentation
+function generateReport() {
+    const history = loadHistory();
+    if (history.length === 0) {
+        showNotification('No data available for report generation', 'error');
+        return;
+    }
+
+    const report = {
+        generated: new Date().toISOString(),
+        totalConversions: history.length,
+        averageConfidence: history.reduce((sum, item) => sum + (item.confidence || 0), 0) / history.length,
+        averageProcessingTime: history.reduce((sum, item) => sum + (item.duration || 0), 0) / history.length,
+        conversions: history.map(item => ({
+            timestamp: item.timestamp,
+            text: item.text,
+            confidence: item.confidence,
+            duration: item.duration
+        }))
+    };
+
+    const reportStr = JSON.stringify(report, null, 2);
+    const blob = new Blob([reportStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `braille-conversion-report-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showNotification('Report generated successfully!');
+}
+
+// Performance monitoring
+function trackPerformance(startTime) {
+    const endTime = performance.now();
+    const processingTime = ((endTime - startTime) / 1000).toFixed(2);
+    console.log(`Processing time: ${processingTime}s`);
+    return parseFloat(processingTime);
+}
+
+// Accessibility improvements
+function announceToScreenReader(message) {
+    const announcement = document.createElement('div');
+    announcement.setAttribute('role', 'status');
+    announcement.setAttribute('aria-live', 'polite');
+    announcement.className = 'sr-only';
+    announcement.textContent = message;
+    document.body.appendChild(announcement);
+    
+    setTimeout(() => {
+        document.body.removeChild(announcement);
+    }, 1000);
+}
+
+// Enhanced error reporting
+function logError(error, context = '') {
+    const errorLog = {
+        timestamp: new Date().toISOString(),
+        context: context,
+        error: error.message,
+        stack: error.stack
+    };
+    
+    console.error('Application Error:', errorLog);
+    
+    // Store errors for debugging (useful for thesis demonstration)
+    const errors = JSON.parse(localStorage.getItem('errorLog') || '[]');
+    errors.unshift(errorLog);
+    
+    // Keep only last 50 errors
+    if (errors.length > 50) {
+        errors.pop();
+    }
+    
+    localStorage.setItem('errorLog', JSON.stringify(errors));
+}
+
+// Initialize performance tracking
+let performanceStartTime = null;
+
+// Wrap convertImage to track performance
+const originalConvertImage = convertImage;
+convertImage = async function() {
+    performanceStartTime = performance.now();
+    try {
+        const result = await originalConvertImage.apply(this, arguments);
+        
+        // Track performance
+        if (performanceStartTime) {
+            const processingTime = trackPerformance(performanceStartTime);
+            
+            // Update result with actual processing time
+            if (result && typeof result === 'object') {
+                result.processingTime = processingTime;
+            }
+        }
+        
+        return result;
+    } catch (error) {
+        logError(error, 'convertImage');
+        throw error;
+    }
+};
+
+// Add accessibility enhancements
+document.addEventListener('DOMContentLoaded', function() {
+    // Add ARIA labels dynamically
+    const fileInput = document.getElementById('fileInput');
+    if (fileInput) {
+        fileInput.setAttribute('aria-label', 'Select Bangla Braille image file for conversion');
+    }
+    
+    // Announce page changes to screen readers
+    if (window.navigationManager) {
+        const originalNavigateToPage = window.navigationManager.navigateToPage;
+        window.navigationManager.navigateToPage = function(page) {
+            const titles = {
+                converter: 'Braille Converter page',
+                dashboard: 'Analytics Dashboard page',
+                history: 'Conversion History page',
+                help: 'Help and Documentation page',
+                about: 'About Project page',
+                settings: 'Settings page'
+            };
+            
+            announceToScreenReader(`Navigated to ${titles[page] || page}`);
+            return originalNavigateToPage.apply(this, arguments);
+        };
+    }
+});
