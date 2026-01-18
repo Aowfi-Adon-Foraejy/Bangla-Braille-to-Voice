@@ -1,0 +1,49 @@
+# Bangla Braille to Voice Conversion System - Dependencies (Python 3.13 Compatible)
+
+# Web Framework
+fastapi>=0.104.1
+uvicorn[standard]>=0.24.0
+
+# Data Validation and Serialization
+pydantic>=2.5.0
+
+# Image Processing (Python 3.13 compatible)
+Pillow>=10.2.0
+
+# Text-to-Speech
+gTTS>=2.4.0
+
+# Audio Processing for Backend
+numpy>=1.24.3
+
+# File Upload and Handling
+python-multipart>=0.0.6
+
+# CORS Support
+python-jose[cryptography]>=3.3.0
+
+# Development and Testing
+pytest>=7.4.3
+pytest-asyncio>=0.21.1
+httpx>=0.25.2
+
+# Optional: For Enhanced TTS (Thesis Enhancement)
+# coqui-tts>=0.9.0  # Alternative TTS engine
+# torch>=2.1.0      # For deep learning models
+# torchvision>=0.16.0  # For computer vision
+# transformers>=4.35.0  # For Transformer models
+# librosa>=0.10.1   # For audio processing
+
+# Optional: For Advanced Image Processing
+# opencv-python>=4.8.1.78
+# scikit-image>=0.22.0
+
+# Optional: For Model Deployment
+# onnxruntime>=1.16.3
+# tensorflow>=2.15.0
+
+# Logging and Monitoring
+loguru>=0.7.2
+
+# Environment Configuration
+python-dotenv>=1.0.0

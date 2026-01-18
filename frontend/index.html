@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bangla Braille to Voice Conversion System</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <h1 class="title">
+                    <span class="title-main">Bangla Braille to Voice</span>
+                    <span class="title-subtitle">Deep Learning Conversion System</span>
+                </h1>
+                <div class="thesis-badge">Thesis Project</div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Upload Section -->
+            <section class="upload-section">
+                <div class="section-header">
+                    <h2>📤 Upload Braille Image</h2>
+                    <p>Select an image containing Bangla Braille characters</p>
+                </div>
+                
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <div class="upload-icon">📸</div>
+                        <h3>Choose Image File</h3>
+                        <p>Supported formats: PNG, JPG, BMP, TIFF, WEBP</p>
+                        <input type="file" id="fileInput" accept="image/*" hidden>
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
+                            Select File
+                        </button>
+                    </div>
+                    
+                    <!-- Image Preview -->
+                    <div class="image-preview" id="imagePreview" style="display: none;">
+                        <img id="previewImg" src="" alt="Braille Image" class="preview-image">
+                        <p class="preview-info" id="previewInfo"></p>
+                        <div class="preview-actions">
+                            <button class="btn btn-secondary" onclick="clearImage()">
+                                🔄 Clear
+                            </button>
+                            <button class="btn btn-primary" id="convertBtn" onclick="convertImage()">
+                                🚀 Convert to Voice
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Processing Status -->
+            <section class="status-section" id="statusSection" style="display: none;">
+                <div class="processing-card">
+                    <div class="processing-icon">
+                        <div class="spinner"></div>
+                    </div>
+                    <h3 id="statusTitle">Processing...</h3>
+                    <p id="statusMessage">Converting Braille to Bangla text and speech...</p>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-grid">
+                    <!-- Text Result -->
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>🔤 Recognized Bangla Text</h3>
+                            <span class="confidence-badge" id="confidenceBadge">95%</span>
+                        </div>
+                        <div class="card-content">
+                            <div class="bangla-text" id="banglaText">
+                                <!-- Recognized text will appear here -->
+                            </div>
+                            <div class="text-actions">
+                                <button class="btn btn-outline" onclick="copyText()">
+                                    📋 Copy Text
+                                </button>
+                                <button class="btn btn-outline" onclick="downloadText()">
+                                    💾 Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Audio Result -->
+                    <div class="result-card">
+                        <div class="card-header">
+                            <h3>🔊 Synthesized Speech</h3>
+                            <span class="duration-badge" id="durationBadge">0:00</span>
+                        </div>
+                        <div class="card-content">
+                            <audio controls id="audioPlayer" class="audio-player">
+                                Your browser does not support the audio element.
+                            </audio>
+                            <div class="audio-actions">
+                                <button class="btn btn-outline" onclick="downloadAudio()">
+                                    ⬇️ Download Audio
+                                </button>
+                                <button class="btn btn-outline" onclick="shareAudio()">
+                                    🔗 Share
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section class="error-section" id="errorSection" style="display: none;">
+                <div class="error-card">
+                    <div class="error-icon">⚠️</div>
+                    <h3 id="errorTitle">Error Occurred</h3>
+                    <p id="errorMessage">An error occurred during processing.</p>
+                    <button class="btn btn-primary" onclick="resetApp()">
+                        🔄 Try Again
+                    </button>
+                </div>
+            </section>
+
+            <!-- Info Section -->
+            <section class="info-section">
+                <div class="info-grid">
+                    <div class="info-card">
+                        <h4>🧠 Deep Learning Model</h4>
+                        <p>CNN/Transformer architecture for Bangla Braille character recognition with high accuracy.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>🗣️ Text-to-Speech</h4>
+                        <p>Google TTS engine optimized for Bengali language with natural voice synthesis.</p>
+                    </div>
+                    <div class="info-card">
+                        <h4>🔬 Thesis Research</h4>
+                        <p>Academic project demonstrating deep learning applications in accessibility technology.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Bangla Braille to Voice Conversion System</p>
+            <p>Thesis Project - Computer Science & Engineering</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

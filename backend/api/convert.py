@@ -1,0 +1,65 @@
+from fastapi import APIRouter, HTTPException, UploadFile, File
+from pydantic import BaseModel
+from typing import Dict
+import os
+import uuid
+from models.braille_model import BrailleRecognizer
+from models.tts_model import TextToSpeech
+
+router = APIRouter(prefix="/api", tags=["convert"])
+
+class ConvertResponse(BaseModel):
+    text: str
+    audio_url: str
+    confidence: float
+    duration: float
+
+@router.post("/convert", response_model=ConvertResponse)
+async def convert_image_to_speech(file: UploadFile = File(...)) -> ConvertResponse:
+    """
+    Full pipeline: Image → Bangla Text → Speech
+    Upload image, recognize Braille, and synthesize speech.
+    """
+    if not file.filename:
+        raise HTTPException(status_code=400, detail="No filename provided")
+    
+    # Validate image format
+    allowed_extensions = {'.png', '.jpg', '.jpeg', '.bmp', '.tiff', '.webp'}
+    file_ext = os.path.splitext(file.filename)[1].lower()
+    
+    if file_ext not in allowed_extensions:
+        raise HTTPException(
+            status_code=400, 
+            detail=f"Unsupported format. Allowed: {', '.join(allowed_extensions)}"
+        )
+    
+    # Save uploaded file
+    file_id = str(uuid.uuid4())
+    filename = f"{file_id}{file_ext}"
+    upload_path = os.path.join("uploads", filename)
+    
+    try:
+        with open(upload_path, "wb") as buffer:
+            content = await file.read()
+            buffer.write(content)
+        
+        # Step 1: Braille Recognition
+        recognizer = BrailleRecognizer()
+        recognition_result = recognizer.recognize(upload_path)
+        
+        # Step 2: Text-to-Speech
+        tts = TextToSpeech()
+        synthesis_result = tts.synthesize(recognition_result["text"])
+        
+        return ConvertResponse(
+            text=recognition_result["text"],
+            audio_url=synthesis_result["audio_url"],
+            confidence=recognition_result["confidence"],
+            duration=synthesis_result["duration"]
+        )
+        
+    except Exception as e:
+        # Cleanup on failure
+        if os.path.exists(upload_path):
+            os.remove(upload_path)
+        raise HTTPException(status_code=500, detail=f"Conversion failed: {str(e)}")
