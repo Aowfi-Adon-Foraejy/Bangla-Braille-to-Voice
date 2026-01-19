@@ -35,8 +35,8 @@ class TextToSpeech:
         # gTTS language code for Bengali
         self.language = 'bn'
         
-        print("🔊 INITIALIZING: Bangla Text-to-Speech Engine")
-        print("🌐 Using gTTS with Bengali language support")
+        print("INITIALIZING: Bangla Text-to-Speech Engine")
+        print("Using gTTS with Bengali language support")
     
     def preprocess_text(self, text: str) -> str:
         """
@@ -129,8 +129,8 @@ class TextToSpeech:
             # Step 4: Generate accessible URL
             audio_url = f"/static/audio/{filename}"
             
-            print(f"🎵 Speech Generated: '{processed_text[:20]}...' ({result['duration']:.2f}s)")
-            print(f"⏱️ Processing Time: {processing_time:.2f}s")
+            print(f"Speech Generated: '{processed_text[:20]}...' ({result['duration']:.2f}s)")
+            print(f"Processing Time: {processing_time:.2f}s")
             
             return {
                 "audio_url": audio_url,

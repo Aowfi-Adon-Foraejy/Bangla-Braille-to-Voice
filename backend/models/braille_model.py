@@ -45,8 +45,8 @@ class BrailleRecognizer:
             " ", "।", ","
         ]
         
-        print("🔬 INITIALIZING: Braille Recognition Model (Mock Implementation)")
-        print("⚠️  THESIS NOTE: This is a placeholder for trained deep learning model")
+        print("INITIALIZING: Braille Recognition Model (Mock Implementation)")
+        print("THESIS NOTE: This is a placeholder for trained deep learning model")
     
     def preprocess_image(self, image_path: str) -> np.ndarray:
         """
@@ -124,7 +124,7 @@ class BrailleRecognizer:
             # In production, this comes from model's softmax output
             confidence = random.uniform(0.75, 0.95)
             
-            print(f"✅ Recognition Complete: '{recognized_text}' (Confidence: {confidence:.2f})")
+            print(f"Recognition Complete: '{recognized_text}' (Confidence: {confidence:.2f})")
             
             return {
                 "text": recognized_text,
