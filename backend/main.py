@@ -188,17 +188,24 @@ async def startup_event():
     """
     Application startup tasks.
     """
-    print("🚀 Starting Bangla Braille to Voice Conversion System")
-    print("📚 Thesis Project: Deep Learning Based Bangla Braille to Voice Conversion")
-    print("🔧 Initializing services...")
+    print("Starting Bangla Braille to Voice Conversion System")
+    print("Thesis Project: Deep Learning Based Bangla Braille to Voice Conversion")
+    print("Initializing services...")
     
     # Ensure required directories exist
     os.makedirs("uploads", exist_ok=True)
     os.makedirs("static/audio", exist_ok=True)
     
-    print("✅ System ready for operation")
-    print("📖 API Documentation: http://localhost:8000/docs")
-    print("🔍 Health Check: http://localhost:8000/health")
+    print("System ready for operation")
+    print("")
+    print("=" * 50)
+    print("Access URLs:")
+    print("- Main Web App: http://localhost:8000/app")
+    print("- API Documentation: http://localhost:8000/docs")  
+    print("- Health Check: http://localhost:8000/health")
+    print("- Root Info: http://localhost:8000")
+    print("=" * 50)
+    print("")
 
 # Shutdown event  
 @app.on_event("shutdown")
@@ -206,8 +213,8 @@ async def shutdown_event():
     """
     Application shutdown tasks.
     """
-    print("🛑 Shutting down Bangla Braille to Voice Conversion System")
-    print("📝 Cleaning up resources...")
+    print("Shutting down Bangla Braille to Voice Conversion System")
+    print("Cleaning up resources...")
 
 if __name__ == "__main__":
     import uvicorn

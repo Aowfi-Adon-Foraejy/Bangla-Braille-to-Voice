@@ -141,6 +141,12 @@ class NavigationManager {
         if (targetPage) {
             targetPage.classList.add('active');
         }
+        
+        // Ensure page content is properly displayed
+        const pageContent = targetPage.querySelector('.container');
+        if (pageContent) {
+            pageContent.style.display = 'block';
+        }
     }
 
     updateActiveMenu() {

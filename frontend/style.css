@@ -46,12 +46,22 @@ body {
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    position: relative;
 }
 
 /* Layout Structure */
 .main-container {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+}
+
+/* Ensure no extra spacing */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Sidebar Navigation */
@@ -169,13 +179,15 @@ body {
 }
 
 /* Main Content Area */
-.main-container > main {
+.main-content {
     flex: 1;
     margin-left: var(--sidebar-width);
     min-height: 100vh;
     transition: margin-left 0.3s ease;
     position: relative;
     z-index: 1;
+    width: calc(100% - var(--sidebar-width));
+    max-width: none;
 }
 
 /* Top Header */
@@ -752,12 +764,10 @@ body {
         transform: translateX(0);
     }
     
-    .main-container {
+    .main-content {
         margin-left: 0;
-    }
-    
-    .main-container > main {
-        margin-left: 0;
+        width: 100%;
+        max-width: 100%;
     }
     
     .mobile-menu-toggle {

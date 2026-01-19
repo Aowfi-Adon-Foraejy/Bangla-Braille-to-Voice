@@ -69,7 +69,7 @@
     </nav>
 
     <!-- Main Content Area -->
-    <div class="main-container">
+    <main class="main-content">
         <!-- Top Header -->
         <header class="top-header">
             <div class="header-left">
@@ -299,10 +299,10 @@
                     <div class="history-header">
                         <h2>Conversion History</h2>
                         <div class="history-actions">
-                            <button class="btn btn-outline" onclick="clearHistory()">
+                            <button class="btn btn-outline" onclick="if(window.navigationManager) window.navigationManager.clearHistory()">
                                 <i class="fas fa-trash"></i> Clear History
                             </button>
-                            <button class="btn btn-primary" onclick="exportHistory()">
+                            <button class="btn btn-primary" onclick="if(window.navigationManager) window.navigationManager.exportHistory()">
                                 <i class="fas fa-download"></i> Export Data
                             </button>
                         </div>
@@ -518,7 +518,7 @@
                 </div>
             </div>
         </main>
-    </div>
+    </main>
 
     <!-- Footer -->
     <footer class="footer">
