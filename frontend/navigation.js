@@ -113,6 +113,12 @@ class NavigationManager {
     }
 
     navigateToPage(page) {
+        // Check if page requires authentication
+        if (this.isProtectedPage(page) && !this.isAuthenticated()) {
+            showAuthModal('login');
+            return;
+        }
+
         this.currentPage = page;
         this.updateActiveMenu();
         this.showPage(page);
@@ -186,6 +192,16 @@ class NavigationManager {
         return validPages.includes(page);
     }
 
+    isProtectedPage(page) {
+        // Pages that require authentication
+        const protectedPages = ['dashboard', 'history', 'settings'];
+        return protectedPages.includes(page);
+    }
+
+    isAuthenticated() {
+        return window.authManager && window.authManager.isAuthenticated();
+    }
+
     toggleSidebar() {
         const sidebar = document.getElementById('sidebar');
         if (sidebar) {
@@ -209,13 +225,26 @@ class NavigationManager {
     loadPageData(page) {
         switch(page) {
             case 'dashboard':
-                this.loadDashboardData();
+                if (this.isAuthenticated()) {
+                    this.loadDashboardData();
+                } else {
+                    this.showLoginPrompt();
+                }
                 break;
             case 'history':
-                this.loadHistoryData();
+                if (this.isAuthenticated()) {
+                    this.loadHistoryData();
+                } else {
+                    this.showLoginPrompt();
+                }
                 break;
             case 'converter':
                 this.updateStats();
+                break;
+            case 'settings':
+                if (this.isAuthenticated()) {
+                    // User-specific settings can be loaded here
+                }
                 break;
         }
     }
@@ -387,6 +416,57 @@ class NavigationManager {
         URL.revokeObjectURL(url);
         showNotification('History exported successfully!');
     }
+
+    showLoginPrompt() {
+        // Show login prompt for protected pages
+        const pageContent = document.querySelector(`#${this.currentPage}-page .container`);
+        if (pageContent) {
+            pageContent.innerHTML = `
+                <div style="text-align: center; padding: 4rem 2rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">
+                        <i class="fas fa-lock" style="color: var(--primary-color);"></i>
+                    </div>
+                    <h2 style="margin-bottom: 1rem; color: var(--text-primary);">Authentication Required</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                        Please login or sign up to access this feature.
+                    </p>
+                    <div style="display: flex; gap: 1rem; justify-content: center;">
+                        <button class="btn btn-primary" onclick="showAuthModal('login')">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <button class="btn btn-outline" onclick="showAuthModal('register')">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+    }
+}
+
+// Global notification system
+function showNotification(message, type = 'success') {
+    // Create notification element
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Add to DOM
+    document.body.appendChild(notification);
+    
+    // Show notification
+    setTimeout(() => notification.classList.add('show'), 100);
+    
+    // Auto remove after 3 seconds
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => document.body.removeChild(notification), 300);
+    }, 3000);
 }
 
 // Initialize navigation when DOM is ready
@@ -397,7 +477,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Make navigation manager globally available for other scripts
     window.navigationManager = navigationManager;
+    window.showNotification = showNotification; // Make globally available
     
-
+ 
 });
 

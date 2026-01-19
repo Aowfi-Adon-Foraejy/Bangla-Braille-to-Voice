@@ -6,6 +6,7 @@ uvicorn[standard]>=0.24.0
 
 # Data Validation and Serialization
 pydantic>=2.5.0
+pydantic[email]>=2.5.0
 
 # Image Processing (Python 3.13 compatible)
 Pillow>=10.2.0

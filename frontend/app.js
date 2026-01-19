@@ -119,12 +119,29 @@ function clearImage() {
 }
 
 // API Functions
+// Helper function to get auth headers
+function getAuthHeaders() {
+    const headers = {};
+    if (window.authManager && window.authManager.isAuthenticated()) {
+        headers['Authorization'] = `Bearer ${window.authManager.token}`;
+    }
+    return headers;
+}
+
 async function checkServerHealth() {
     try {
-        const response = await fetch(`${API_BASE_URL}/health`);
+        const response = await fetch(`${API_BASE_URL}/health`, {
+            headers: getAuthHeaders()
+        });
         if (!response.ok) {
             throw new Error('Server not responding');
         }
+        console.log('✅ Server is healthy');
+    } catch (error) {
+        console.error('❌ Server health check failed:', error);
+        showError('Server Error', 'Unable to connect to the server. Please ensure that backend is running on localhost:8000');
+    }
+}
         console.log('✅ Server is healthy');
     } catch (error) {
         console.error('❌ Server health check failed:', error);
@@ -156,6 +173,7 @@ async function convertImage() {
         // Call convert API (full pipeline)
         const response = await fetch(`${API_BASE_URL}/api/convert`, {
             method: 'POST',
+            headers: getAuthHeaders(),
             body: formData,
             timeout: 60000 // 60 second timeout
         });
@@ -418,12 +436,20 @@ document.addEventListener('keydown', function(e) {
 // Auto-save to localStorage (for thesis demo purposes)
 function saveToHistory(data) {
     const history = JSON.parse(localStorage.getItem('brailleHistory') || '[]');
-    history.unshift({
+    const historyItem = {
         timestamp: new Date().toISOString(),
         text: data.text,
         confidence: data.confidence,
         duration: data.duration
-    });
+    };
+    
+    // Add user information if authenticated
+    if (window.authManager && window.authManager.isAuthenticated()) {
+        historyItem.userId = window.authManager.currentUser.id;
+        historyItem.username = window.authManager.currentUser.username;
+    }
+    
+    history.unshift(historyItem);
     
     // Keep only last 50 conversions (increased for thesis analytics)
     if (history.length > 50) {

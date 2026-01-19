@@ -26,6 +26,7 @@ from api.upload import router as upload_router
 from api.recognize import router as recognize_router
 from api.synthesize import router as synthesize_router
 from api.convert import router as convert_router
+from api.auth import router as auth_router
 
 # Initialize FastAPI application
 app = FastAPI(
@@ -71,6 +72,7 @@ app.include_router(upload_router)
 app.include_router(recognize_router)  
 app.include_router(synthesize_router)
 app.include_router(convert_router)
+app.include_router(auth_router)
 
 @app.get("/")
 async def root():

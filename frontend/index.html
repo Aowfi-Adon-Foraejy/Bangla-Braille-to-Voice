@@ -79,10 +79,26 @@
                 <h1 class="page-title" id="pageTitle">Braille Converter</h1>
             </div>
             <div class="header-right">
-                <div class="user-menu">
-                    <button class="user-avatar">
+                <div class="user-menu" id="userMenu">
+                    <button class="user-avatar" id="userAvatar" onclick="toggleUserMenu()">
                         <i class="fas fa-user"></i>
                     </button>
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-header">
+                            <span class="user-name" id="userName">Guest User</span>
+                            <span class="user-email" id="userEmail">Not logged in</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <button class="dropdown-item" id="loginBtn" onclick="showAuthModal('login')">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </button>
+                        <button class="dropdown-item" id="registerBtn" onclick="showAuthModal('register')">
+                            <i class="fas fa-user-plus"></i> Sign Up
+                        </button>
+                        <button class="dropdown-item" id="logoutBtn" style="display: none;" onclick="logout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
                 </div>
             </div>
         </header>
@@ -528,6 +544,70 @@
         </div>
     </footer>
 
+    <!-- Authentication Modal -->
+    <div class="auth-modal" id="authModal">
+        <div class="auth-modal-overlay" onclick="closeAuthModal()"></div>
+        <div class="auth-modal-content">
+            <div class="auth-modal-header">
+                <h2 id="authTitle">Login</h2>
+                <button class="auth-modal-close" onclick="closeAuthModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="auth-modal-body">
+                <!-- Error/Success Messages -->
+                <div class="auth-error" id="authError"></div>
+                <div class="auth-success" id="authSuccess"></div>
+                
+                <!-- Login Form -->
+                <form id="loginForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="loginUsername">Username</label>
+                        <input type="text" id="loginUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" name="password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary auth-submit">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                </form>
+
+                <!-- Register Form -->
+                <form id="registerForm" class="auth-form" style="display: none;">
+                    <div class="form-group">
+                        <label for="registerUsername">Username</label>
+                        <input type="text" id="registerUsername" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerConfirmPassword">Confirm Password</label>
+                        <input type="password" id="registerConfirmPassword" name="confirmPassword" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary auth-submit">
+                        <i class="fas fa-user-plus"></i> Sign Up
+                    </button>
+                </form>
+                
+                <!-- Form Switch -->
+                <div class="auth-switch">
+                    <span id="authSwitchText">Don't have an account?</span>
+                    <button type="button" id="authSwitchBtn" onclick="switchAuthMode()">Sign Up</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="auth.js"></script>
     <script src="app.js"></script>
     <script src="navigation.js"></script>
 </body>
