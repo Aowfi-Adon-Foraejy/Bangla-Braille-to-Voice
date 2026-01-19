@@ -3,31 +3,41 @@
 // API Configuration
 const API_BASE_URL = 'http://localhost:8000';
 
-// DOM Elements
-const fileInput = document.getElementById('fileInput');
-const uploadArea = document.getElementById('uploadArea');
-const imagePreview = document.getElementById('imagePreview');
-const previewImg = document.getElementById('previewImg');
-const statusSection = document.getElementById('statusSection');
-const resultsSection = document.getElementById('resultsSection');
-const errorSection = document.getElementById('errorSection');
-const banglaText = document.getElementById('banglaText');
-const audioPlayer = document.getElementById('audioPlayer');
-const confidenceBadge = document.getElementById('confidenceBadge');
-const durationBadge = document.getElementById('durationBadge');
-
 // Global variables
 let selectedFile = null;
+let fileInput, uploadArea, imagePreview, previewImg;
+let statusSection, resultsSection, errorSection;
+let banglaText, audioPlayer, confidenceBadge, durationBadge;
 
 // Event Listeners
 document.addEventListener('DOMContentLoaded', function() {
+    // Initialize DOM Elements after DOM is loaded
+    fileInput = document.getElementById('fileInput');
+    uploadArea = document.getElementById('uploadArea');
+    imagePreview = document.getElementById('imagePreview');
+    previewImg = document.getElementById('previewImg');
+    statusSection = document.getElementById('statusSection');
+    resultsSection = document.getElementById('resultsSection');
+    errorSection = document.getElementById('errorSection');
+    banglaText = document.getElementById('banglaText');
+    audioPlayer = document.getElementById('audioPlayer');
+    confidenceBadge = document.getElementById('confidenceBadge');
+    durationBadge = document.getElementById('durationBadge');
+    
     setupEventListeners();
     checkServerHealth();
 });
 
 function setupEventListeners() {
+    if (!fileInput || !uploadArea || !imagePreview || !previewImg) {
+        console.error('Missing required DOM elements');
+        return;
+    }
+    
     // File input change
-    fileInput.addEventListener('change', handleFileSelect);
+    fileInput.addEventListener('change', function(e) {
+        handleFileSelect(e);
+    });
     
     // Drag and drop
     uploadArea.addEventListener('dragover', handleDragOver);
@@ -94,16 +104,37 @@ function displayImagePreview(file) {
     const reader = new FileReader();
     
     reader.onload = function(e) {
-        previewImg.src = e.target.result;
+        // Set image source first
+        if (previewImg) {
+            previewImg.src = e.target.result;
+        }
         
         // Display file info
-        const fileSize = (file.size / 1024).toFixed(2);  // Convert to KB
+        const fileSize = (file.size / 1024).toFixed(2);
         const previewInfo = document.getElementById('previewInfo');
-        previewInfo.textContent = `${file.name} • ${fileSize} KB`;
         
-        uploadArea.querySelector('.upload-content').style.display = 'none';
-        imagePreview.style.display = 'flex';
-        imagePreview.classList.add('fade-in');
+        if (previewInfo) {
+            previewInfo.textContent = `${file.name} • ${fileSize} KB`;
+        }
+        
+        // Hide upload content and show preview
+        const uploadContent = uploadArea.querySelector('.upload-content');
+        if (uploadContent) {
+            uploadContent.style.display = 'none';
+        }
+        
+        if (imagePreview) {
+            // Use class-based approach with !important CSS rule
+            imagePreview.classList.add('show');
+            imagePreview.classList.add('fade-in');
+            
+            // Force a reflow
+            imagePreview.offsetHeight;
+            
+            // Log the final state
+            console.log('Image preview classes:', imagePreview.className);
+            console.log('Image preview computed display:', window.getComputedStyle(imagePreview).display);
+        }
     };
     
     reader.readAsDataURL(file);
@@ -114,7 +145,7 @@ function clearImage() {
     fileInput.value = '';
     previewImg.src = '';
     uploadArea.querySelector('.upload-content').style.display = 'flex';
-    imagePreview.style.display = 'none';
+    imagePreview.classList.remove('show');
     hideAllSections();
 }
 
@@ -136,12 +167,6 @@ async function checkServerHealth() {
         if (!response.ok) {
             throw new Error('Server not responding');
         }
-        console.log('✅ Server is healthy');
-    } catch (error) {
-        console.error('❌ Server health check failed:', error);
-        showError('Server Error', 'Unable to connect to the server. Please ensure that backend is running on localhost:8000');
-    }
-}
         console.log('✅ Server is healthy');
     } catch (error) {
         console.error('❌ Server health check failed:', error);
@@ -173,7 +198,7 @@ async function convertImage() {
         // Call convert API (full pipeline)
         const response = await fetch(`${API_BASE_URL}/api/convert`, {
             method: 'POST',
-            headers: getAuthHeaders(),
+            // Don't set Content-Type header when using FormData - browser sets it automatically with boundary
             body: formData,
             timeout: 60000 // 60 second timeout
         });

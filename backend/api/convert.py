@@ -3,10 +3,30 @@ from pydantic import BaseModel
 from typing import Dict
 import os
 import uuid
+import time
 from models.braille_model import BrailleRecognizer
 from models.tts_model import TextToSpeech
 
 router = APIRouter(prefix="/api", tags=["convert"])
+
+# Constants for file management
+UPLOAD_DIR = "uploads"
+MAX_FILE_AGE_HOURS = 24
+
+def cleanup_old_files():
+    """Remove files older than MAX_FILE_AGE_HOURS from uploads directory."""
+    try:
+        current_time = time.time()
+        if os.path.exists(UPLOAD_DIR):
+            for filename in os.listdir(UPLOAD_DIR):
+                file_path = os.path.join(UPLOAD_DIR, filename)
+                if os.path.isfile(file_path):
+                    file_age = current_time - os.path.getctime(file_path)
+                    if file_age > MAX_FILE_AGE_HOURS * 3600:
+                        os.remove(file_path)
+                        print(f"Cleaned up old file: {filename}")
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
 
 class ConvertResponse(BaseModel):
     text: str
@@ -20,6 +40,9 @@ async def convert_image_to_speech(file: UploadFile = File(...)) -> ConvertRespon
     Full pipeline: Image → Bangla Text → Speech
     Upload image, recognize Braille, and synthesize speech.
     """
+    # Run cleanup before processing
+    cleanup_old_files()
+    
     if not file.filename:
         raise HTTPException(status_code=400, detail="No filename provided")
     
@@ -33,12 +56,24 @@ async def convert_image_to_speech(file: UploadFile = File(...)) -> ConvertRespon
             detail=f"Unsupported format. Allowed: {', '.join(allowed_extensions)}"
         )
     
-    # Save uploaded file
+# Save uploaded file
     file_id = str(uuid.uuid4())
     filename = f"{file_id}{file_ext}"
     upload_path = os.path.join("uploads", filename)
     
     try:
+        # Check file size before reading
+        file.file.seek(0, 2)  # Seek to end
+        file_size = file.file.tell()
+        file.file.seek(0)  # Reset to beginning
+        
+        max_size = 10 * 1024 * 1024  # 10MB
+        if file_size > max_size:
+            raise HTTPException(
+                status_code=413,
+                detail=f"File too large. Maximum size: 10MB, received: {file_size / (1024*1024):.2f}MB"
+            )
+        
         with open(upload_path, "wb") as buffer:
             content = await file.read()
             buffer.write(content)
